@@ -14,14 +14,14 @@
     "@drift/router": "workspace:*",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.468.0",
-    "react": "^18.3.1",
+    "react": "^19.2.8",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@drift/cli": "workspace:*",
     "@drift/compiler": "workspace:*",
     "@drift/vite-plugin": "workspace:*",
-    "@types/react": "^18.2.0",
+    "@types/react": "^19.2.18",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.7.0",
     "typescript": "^5.3.0",
