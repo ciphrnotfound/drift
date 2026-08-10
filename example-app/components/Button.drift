@@ -1,0 +1,109 @@
+component Button {
+  props {
+    variant: "primary" | "secondary" | "outline"
+    size: "sm" | "md" | "lg"
+    disabled: boolean
+  }
+
+  style {
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    font-family: $typography.family.sans
+    font-weight: $typography.weight.semibold
+    border-radius: $border.radius.md
+    cursor: pointer
+    transition: all 0.2s $easing.smooth
+    border: none
+    outline: none
+    
+    // Variant styles
+    variant {
+      primary {
+        background: $color.primary.500
+        color: $color.white
+        
+        hover {
+          background: $color.primary.600
+        }
+        
+        active {
+          background: $color.primary.700
+        }
+      }
+      
+      secondary {
+        background: $color.gray.100
+        color: $color.gray.900
+        
+        hover {
+          background: $color.gray.200
+        }
+        
+        active {
+          background: $color.gray.300
+        }
+      }
+      
+      outline {
+        background: transparent
+        color: $color.primary.500
+        border: $border.width.medium solid $color.primary.500
+        
+        hover {
+          background: $color.primary.50
+        }
+        
+        active {
+          background: $color.primary.100
+        }
+      }
+    }
+    
+    // Size styles
+    size {
+      sm {
+        font-size: $text.sm
+        padding: $space.2 $space.4
+        gap: $space.2
+      }
+      md {
+        font-size: $text.base
+        padding: $space.3 $space.6
+        gap: $space.2
+      }
+      lg {
+        font-size: $text.lg
+        padding: $space.4 $space.8
+        gap: $space.3
+      }
+    }
+    
+    // Disabled state
+    disabled {
+      true {
+        opacity: 0.5
+        cursor: not-allowed
+        pointer-events: none
+      }
+    }
+  }
+
+  motion {
+    enter {
+      opacity: 0
+      scale: 0.95
+      duration: 0.2
+    }
+    hover {
+      scale: 1.02
+    }
+    press {
+      scale: 0.98
+    }
+  }
+
+  render {
+    <button>{children}</button>
+  }
+}

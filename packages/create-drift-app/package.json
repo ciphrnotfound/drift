@@ -1,0 +1,44 @@
+{
+  "name": "create-drift-app",
+  "version": "0.1.0",
+  "description": "Create a new Drift frontend application",
+  "type": "module",
+  "bin": {
+    "create-drift-app": "./bin/create-drift-app.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "@drift/cli": "workspace:*"
+  },
+  "license": "MIT",
+  "author": "Drift contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/create-drift-app"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "drift",
+    "react",
+    "frontend",
+    "framework",
+    "compiler",
+    "routing",
+    "styling",
+    "animation",
+    "design-tokens",
+    "vite"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "name": "@drift/cli",
+  "version": "0.1.0",
+  "description": "CLI tools for Drift framework",
+  "bin": {
+    "drift": "./dist/cli.js",
+    "create-drift-app": "./dist/create.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./create": {
+      "types": "./dist/create.d.ts",
+      "import": "./dist/create.mjs",
+      "require": "./dist/create.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "start": "node ./dist/cli.js",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@drift/types": "workspace:*",
+    "@drift/compiler": "workspace:*",
+    "@drift/seo": "workspace:*",
+    "@drift/tokens": "workspace:*",
+    "@drift/router": "workspace:*",
+    "@drift/vite-plugin": "workspace:*",
+    "commander": "^11.1.0",
+    "vite": "^6.4.3",
+    "@vitejs/plugin-react": "^4.7.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "author": "Drift contributors",
+  "keywords": [
+    "drift",
+    "react",
+    "framework",
+    "compiler",
+    "styling",
+    "animation",
+    "tokens",
+    "design-system",
+    "parser",
+    "ast",
+    "transpiler",
+    "cli",
+    "command-line",
+    "scaffolding",
+    "frontend",
+    "routing",
+    "design-tokens",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

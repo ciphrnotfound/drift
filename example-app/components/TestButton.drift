@@ -1,0 +1,9 @@
+style TestButton {
+  pad $space.4
+  bg $color.primary
+  text white
+}
+
+render TestButton({ children }) {
+  <button>{children}</button>
+}

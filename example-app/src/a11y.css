@@ -1,0 +1,61 @@
+/* Loaded last so small interface labels retain WCAG AA contrast in every preview. */
+.dh-proof span,
+.dh-pipeline article > div span,
+.dh-pipeline p,
+.dh-app-main header small,
+.dh-app-stats small,
+.dh-activity > span,
+.dh-integrations p,
+.dh-planned,
+.seo-artifacts span,
+.ui-playground > aside > span,
+.ui-toolbar button,
+.ui-demo > span,
+.ui-props span,
+.search-preview p,
+.social-preview small,
+.social-preview p {
+  color: #606060;
+}
+
+.dh-ecosystem-copy > p:not(.dh-kicker),
+.dh-library-list small,
+.dh-output-grid p,
+.language-workbench .lw-files > span,
+.language-workbench .lw-tabs > span,
+.language-workbench .lw-output > span,
+.language-workbench small,
+.route-model small,
+.interop-code > div small {
+  color: #aaa;
+}
+
+.seo-source .lw-tabs > span {
+  color: #aaa;
+}
+
+.seo-output-band .pp-kicker {
+  color: #0757d8 !important;
+}
+
+.pp-dark .pp-kicker {
+  color: #6ca2ff !important;
+}
+
+.dh-ecosystem .dh-kicker,
+.dh-output .dh-kicker {
+  color: #6ca2ff !important;
+}
+
+.dh-app-shell aside button,
+.dh-final p {
+  color: #606060;
+}
+
+.dh-integrations b {
+  color: #087a49;
+}
+
+.dh-activity > div {
+  opacity: 1 !important;
+}

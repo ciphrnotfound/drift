@@ -1,0 +1,24 @@
+// Button component with curly-brace syntax
+
+style Button {
+  layout row center gap($space.2)
+  bg $color.primary
+  text $type.sm bold white
+  radius $radius.md
+  pad $space.2 $space.4
+  cursor pointer
+
+  hover {
+    bg $color.primary.dark
+  }
+
+  press {
+    shrink 0.97
+  }
+}
+
+render Button({ label, onClick }) {
+  <button onClick={onClick}>
+    <span>{label}</span>
+  </button>
+}

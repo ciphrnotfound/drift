@@ -1,0 +1,21 @@
+component HomePage {
+  metadata {
+    title: "Drift - The Frontend Language for Speed, UI, and SEO"
+    description: "Drift unifies typed UI, scoped styling, motion, fonts, and server-rendered SEO into one frontend language."
+    keywords: "drift, frontend framework, seo, react, static export, tailwind alternative"
+  }
+
+  style {
+    layout: col
+    min-height: 100vh
+    bg: #061538
+    text: white
+  }
+
+  render {
+    <main>
+      <h1>Drift</h1>
+      <p>The frontend language for speed, UI, and SEO.</p>
+    </main>
+  }
+}
