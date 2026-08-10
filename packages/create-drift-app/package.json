@@ -16,13 +16,13 @@
   "author": "Drift contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/drift-framework/drift.git",
+    "url": "https://github.com/ciphrnotfound/drift.git",
     "directory": "packages/create-drift-app"
   },
   "bugs": {
-    "url": "https://github.com/drift-framework/drift/issues"
+    "url": "https://github.com/ciphrnotfound/drift/issues"
   },
-  "homepage": "https://github.com/drift-framework/drift#readme",
+  "homepage": "https://github.com/ciphrnotfound/drift#readme",
   "engines": {
     "node": ">=18.0.0"
   },

@@ -44,13 +44,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/drift-framework/drift.git",
+    "url": "https://github.com/ciphrnotfound/drift.git",
     "directory": "packages/cli"
   },
   "bugs": {
-    "url": "https://github.com/drift-framework/drift/issues"
+    "url": "https://github.com/ciphrnotfound/drift/issues"
   },
-  "homepage": "https://github.com/drift-framework/drift#readme",
+  "homepage": "https://github.com/ciphrnotfound/drift#readme",
   "author": "Drift contributors",
   "keywords": [
     "drift",
