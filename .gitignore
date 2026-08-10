@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+out/
+.vercel/
+.drift/
+example-app/compiled/
+*.tsbuildinfo
+*.tgz
+
+# Test coverage
+coverage/
+playwright-report/
+test-results/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+.astra/
+.cursorrules
+.windsurfrules
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+*.tmp
+.cache/
+.temp/

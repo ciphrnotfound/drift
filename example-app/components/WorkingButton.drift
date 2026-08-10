@@ -1,0 +1,15 @@
+style WorkingButton {
+  pad 12px 24px
+  bg #3b82f6
+  color white
+  radius 6px
+  cursor pointer
+  
+  hover {
+    bg #2563eb
+  }
+}
+
+render WorkingButton({ children }) {
+  <button>{children}</button>
+}

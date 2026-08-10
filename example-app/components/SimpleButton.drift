@@ -1,0 +1,40 @@
+component SimpleButton {
+  style {
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    padding: 12px 24px
+    background: #3b82f6
+    color: #ffffff
+    border-radius: 6px
+    font-weight: 600
+    cursor: pointer
+    border: none
+    font-size: 16px
+    transition: all 0.2s ease
+    
+    hover {
+      background: #2563eb
+      transform: scale(1.02)
+    }
+    
+    active {
+      background: #1d4ed8
+      transform: scale(0.98)
+    }
+  }
+
+  motion {
+    hover {
+      scale: 1.02
+    }
+    
+    tap {
+      scale: 0.98
+    }
+  }
+
+  render {
+    <button>{children}</button>
+  }
+}

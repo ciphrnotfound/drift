@@ -1,0 +1,65 @@
+{
+  "name": "@drift/motion-runtime",
+  "version": "0.1.0",
+  "description": "Custom animation runtime for Drift using Web Animations API",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "drift",
+    "animation",
+    "web-animations-api",
+    "motion",
+    "react",
+    "frontend",
+    "framework",
+    "compiler",
+    "routing",
+    "styling",
+    "design-tokens",
+    "vite"
+  ],
+  "author": "Drift contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^3.2.6",
+    "fast-check": "^3.15.0"
+  },
+  "peerDependencies": {},
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/motion-runtime"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

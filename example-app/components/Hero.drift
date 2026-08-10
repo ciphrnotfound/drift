@@ -1,0 +1,108 @@
+import { Button } from "./Button.drift"
+
+component Hero {
+  props {
+    title: string
+    subtitle: string
+    imageUrl: string
+    imageAlt: string
+  }
+
+  style {
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    min-height: 600px
+    padding: $space.8
+    background: linear-gradient(135deg, $color.primary.500, $color.primary.700)
+    color: $color.white
+    text-align: center
+    position: relative
+    overflow: hidden
+    
+    // Background image styling
+    .hero-image {
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      object-fit: cover
+      opacity: 0.2
+      z-index: 0
+    }
+    
+    .hero-content {
+      position: relative
+      z-index: 1
+      max-width: 800px
+    }
+    
+    .hero-title {
+      font-size: $text.2xl
+      font-weight: $typography.weight.bold
+      margin-bottom: $space.4
+      line-height: 1.2
+    }
+    
+    .hero-subtitle {
+      font-size: $text.lg
+      font-weight: $typography.weight.normal
+      margin-bottom: $space.6
+      opacity: 0.9
+    }
+    
+    .hero-actions {
+      display: flex
+      gap: $space.4
+      justify-content: center
+    }
+    
+    responsive {
+      md {
+        .hero-title {
+          font-size: $text.3xl
+        }
+        
+        .hero-subtitle {
+          font-size: $text.xl
+        }
+      }
+      
+      lg {
+        .hero-title {
+          font-size: $text.4xl
+        }
+      }
+    }
+  }
+
+  motion {
+    enter {
+      opacity: 0
+    }
+    
+    animate {
+      opacity: 1
+      transition: {
+        duration: 0.6
+        easing: $easing.smooth
+      }
+    }
+  }
+
+  render {
+    <div>
+      <img src={imageUrl} alt={imageAlt} className="hero-image" />
+      <div className="hero-content">
+        <h1 className="hero-title">{title}</h1>
+        <p className="hero-subtitle">{subtitle}</p>
+        <div className="hero-actions">
+          <Button variant="primary" size="lg">Get Started</Button>
+          <Button variant="outline" size="lg">Learn More</Button>
+        </div>
+      </div>
+    </div>
+  }
+}

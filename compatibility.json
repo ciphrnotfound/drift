@@ -1,0 +1,17 @@
+{
+  "status": "public-alpha",
+  "node": ["18", "20", "22"],
+  "packageManager": { "pnpm": ">=8" },
+  "frontend": {
+    "react": "18.x",
+    "vite": ">=6.4.3 <7",
+    "typescript": ">=5.3 <6",
+    "framerMotion": "10.x",
+    "tailwind": "3.x with a tailwind.config file"
+  },
+  "browsers": {
+    "chromium": "current",
+    "firefox": "not-yet-gated",
+    "webkit": "not-yet-gated"
+  }
+}

@@ -1,0 +1,19 @@
+component UIPage {
+  metadata {
+    title: "Drift UI - Clean Interfaces and Motion"
+    description: "Drift UI combines native styling, optional Tailwind compatibility, Manrope fonts, and clean route transitions."
+    keywords: "drift ui, drift style, framer motion, tailwind alternative"
+  }
+
+  style {
+    layout: col
+    min-height: 100vh
+  }
+
+  render {
+    <main>
+      <h1>Drift UI</h1>
+      <p>Clean interfaces with native styling and motion.</p>
+    </main>
+  }
+}

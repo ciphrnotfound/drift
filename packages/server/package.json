@@ -1,0 +1,61 @@
+{
+  "name": "@drift/server",
+  "version": "0.1.0",
+  "description": "Secure server primitives and deployment adapter contracts for Drift",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/client-error.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vercel": {
+      "types": "./dist/vercel.d.ts",
+      "browser": "./dist/client-error.js",
+      "import": "./dist/vercel.js",
+      "require": "./dist/vercel.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "author": "Drift contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/server"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "drift",
+    "react",
+    "frontend",
+    "framework",
+    "compiler",
+    "routing",
+    "styling",
+    "animation",
+    "design-tokens",
+    "vite"
+  ]
+}

@@ -1,0 +1,220 @@
+:root {
+  --drift-ui-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --drift-ui-bg: #ffffff;
+  --drift-ui-surface: #ffffff;
+  --drift-ui-muted: #f8fafc;
+  --drift-ui-text: #0f172a;
+  --drift-ui-soft-text: #475569;
+  --drift-ui-border: #dbe3ef;
+  --drift-ui-primary: #2563eb;
+  --drift-ui-primary-strong: #1d4ed8;
+  --drift-ui-danger: #dc2626;
+  --drift-ui-danger-strong: #b91c1c;
+  --drift-ui-ring: rgb(37 99 235 / 0.28);
+  --drift-ui-radius-sm: 6px;
+  --drift-ui-radius-md: 8px;
+  --drift-ui-radius-lg: 12px;
+  --drift-ui-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.08);
+  --drift-ui-shadow-md: 0 12px 32px rgb(15 23 42 / 0.12);
+}
+
+.drift-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--drift-ui-radius-md);
+  font-family: var(--drift-ui-font);
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.drift-ui-button:hover {
+  transform: translateY(-1px);
+}
+
+.drift-ui-button:focus-visible,
+.drift-ui-input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--drift-ui-ring);
+}
+
+.drift-ui-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.drift-ui-button[data-size="sm"] {
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+}
+
+.drift-ui-button[data-size="md"] {
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+}
+
+.drift-ui-button[data-size="lg"] {
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+}
+
+.drift-ui-button[data-size="icon"] {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+}
+
+.drift-ui-button[data-variant="primary"] {
+  background: var(--drift-ui-primary);
+  color: white;
+}
+
+.drift-ui-button[data-variant="primary"]:hover {
+  background: var(--drift-ui-primary-strong);
+}
+
+.drift-ui-button[data-variant="secondary"] {
+  background: var(--drift-ui-muted);
+  border-color: var(--drift-ui-border);
+  color: var(--drift-ui-text);
+}
+
+.drift-ui-button[data-variant="outline"] {
+  background: transparent;
+  border-color: var(--drift-ui-border);
+  color: var(--drift-ui-text);
+}
+
+.drift-ui-button[data-variant="ghost"] {
+  background: transparent;
+  color: var(--drift-ui-text);
+}
+
+.drift-ui-button[data-variant="danger"] {
+  background: var(--drift-ui-danger);
+  color: white;
+}
+
+.drift-ui-button[data-variant="danger"]:hover {
+  background: var(--drift-ui-danger-strong);
+}
+
+.drift-ui-button__spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  animation: drift-ui-spin 700ms linear infinite;
+}
+
+.drift-ui-card {
+  background: var(--drift-ui-surface);
+  border: 1px solid var(--drift-ui-border);
+  border-radius: var(--drift-ui-radius-lg);
+  box-shadow: var(--drift-ui-shadow-sm);
+  color: var(--drift-ui-text);
+}
+
+.drift-ui-card[data-tone="muted"] {
+  background: var(--drift-ui-muted);
+}
+
+.drift-ui-card[data-tone="accent"] {
+  border-color: rgb(37 99 235 / 0.35);
+  box-shadow: var(--drift-ui-shadow-md);
+}
+
+.drift-ui-card[data-interactive="true"] {
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.drift-ui-card[data-interactive="true"]:hover {
+  border-color: rgb(37 99 235 / 0.45);
+  box-shadow: var(--drift-ui-shadow-md);
+  transform: translateY(-2px);
+}
+
+.drift-ui-card__header,
+.drift-ui-card__body,
+.drift-ui-card__footer {
+  padding: 1rem;
+}
+
+.drift-ui-card__header {
+  border-bottom: 1px solid var(--drift-ui-border);
+}
+
+.drift-ui-card__footer {
+  border-top: 1px solid var(--drift-ui-border);
+}
+
+.drift-ui-input {
+  width: 100%;
+  min-height: 2.5rem;
+  border: 1px solid var(--drift-ui-border);
+  border-radius: var(--drift-ui-radius-md);
+  background: var(--drift-ui-bg);
+  color: var(--drift-ui-text);
+  font-family: var(--drift-ui-font);
+  font-size: 0.9375rem;
+  padding: 0 0.75rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.drift-ui-input::placeholder {
+  color: var(--drift-ui-soft-text);
+}
+
+.drift-ui-input[data-invalid="true"] {
+  border-color: var(--drift-ui-danger);
+}
+
+.drift-ui-stack {
+  display: flex;
+  gap: 1rem;
+}
+
+.drift-ui-stack[data-direction="row"] {
+  flex-direction: row;
+}
+
+.drift-ui-stack[data-direction="column"] {
+  flex-direction: column;
+}
+
+.drift-ui-stack[data-wrap="true"] {
+  flex-wrap: wrap;
+}
+
+.drift-ui-stack[data-align="start"] { align-items: flex-start; }
+.drift-ui-stack[data-align="center"] { align-items: center; }
+.drift-ui-stack[data-align="end"] { align-items: flex-end; }
+.drift-ui-stack[data-align="stretch"] { align-items: stretch; }
+.drift-ui-stack[data-justify="start"] { justify-content: flex-start; }
+.drift-ui-stack[data-justify="center"] { justify-content: center; }
+.drift-ui-stack[data-justify="end"] { justify-content: flex-end; }
+.drift-ui-stack[data-justify="between"] { justify-content: space-between; }
+.drift-ui-stack[data-gap="0"] { gap: 0; }
+.drift-ui-stack[data-gap="1"] { gap: 0.25rem; }
+.drift-ui-stack[data-gap="2"] { gap: 0.5rem; }
+.drift-ui-stack[data-gap="3"] { gap: 0.75rem; }
+.drift-ui-stack[data-gap="4"] { gap: 1rem; }
+.drift-ui-stack[data-gap="5"] { gap: 1.25rem; }
+.drift-ui-stack[data-gap="6"] { gap: 1.5rem; }
+.drift-ui-stack[data-gap="8"] { gap: 2rem; }
+
+@keyframes drift-ui-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

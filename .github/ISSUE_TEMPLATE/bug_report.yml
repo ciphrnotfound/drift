@@ -1,0 +1,57 @@
+name: Bug report
+description: Report reproducible Drift behavior
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Do not report security vulnerabilities here. Use the repository Security tab.
+  - type: input
+    id: version
+    attributes:
+      label: Drift version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: package
+    attributes:
+      label: Area
+      options:
+        - Compiler or language
+        - Router
+        - Styling or tokens
+        - Motion
+        - CLI or scaffolding
+        - Vite plugin or development overlay
+        - Server or deployment
+        - Fonts or SEO
+        - UI components
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include a repository link or the smallest relevant source example.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Node.js, package manager, browser, and operating system versions.
+    validations:
+      required: true

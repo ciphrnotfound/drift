@@ -1,0 +1,56 @@
+import { Card } from "./Card.drift"
+
+component ImageCard {
+  props {
+    imageUrl: string
+    imageAlt: string
+    title: string
+    description: string
+  }
+
+  style {
+    .image-wrapper {
+      width: 100%
+      height: 200px
+      overflow: hidden
+      border-radius: $border.radius.md
+      margin-bottom: $space.4
+    }
+    
+    .card-image {
+      width: 100%
+      height: 100%
+      object-fit: cover
+      transition: transform 0.3s $easing.smooth
+    }
+    
+    .card-title {
+      font-size: $text.xl
+      font-weight: $typography.weight.bold
+      color: $color.gray.900
+      margin-bottom: $space.2
+    }
+    
+    .card-description {
+      font-size: $text.base
+      color: $color.gray.600
+      line-height: 1.6
+    }
+    
+    hover {
+      .card-image {
+        transform: scale(1.05)
+      }
+    }
+  }
+
+  render {
+    <Card hoverable={true} elevated={true}>
+      <div className="image-wrapper">
+        <img src={imageUrl} alt={imageAlt} className="card-image" />
+      </div>
+      <h3 className="card-title">{title}</h3>
+      <p className="card-description">{description}</p>
+    </Card>
+  }
+}

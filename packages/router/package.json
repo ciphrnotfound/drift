@@ -1,0 +1,79 @@
+{
+  "name": "@drift/router",
+  "version": "0.1.0",
+  "description": "File-based routing for Drift framework",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/client.mjs",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@drift/font": "workspace:*",
+    "@drift/seo": "workspace:*",
+    "@drift/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/router"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "author": "Drift contributors",
+  "keywords": [
+    "drift",
+    "react",
+    "framework",
+    "compiler",
+    "styling",
+    "animation",
+    "tokens",
+    "design-system",
+    "parser",
+    "ast",
+    "transpiler",
+    "frontend",
+    "routing",
+    "design-tokens",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

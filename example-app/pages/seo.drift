@@ -1,0 +1,19 @@
+component SEOPage {
+  metadata {
+    title: "Drift SEO - Static Metadata and Export"
+    description: "Drift compiles route metadata into static SEO head tags, canonical URLs, Open Graph data, robots.txt, and sitemap.xml."
+    keywords: "drift seo, static export, canonical, open graph, sitemap"
+  }
+
+  style {
+    layout: col
+    min-height: 100vh
+  }
+
+  render {
+    <main>
+      <h1>Drift SEO</h1>
+      <p>Route metadata becomes static search output.</p>
+    </main>
+  }
+}

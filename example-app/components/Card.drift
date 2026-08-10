@@ -1,0 +1,27 @@
+component Card {
+  props {
+    elevated: boolean
+  }
+
+  style {
+    background: $color.white
+    border-radius: $border.radius.lg
+    padding: $space.6
+    transition: all 0.3s $easing.smooth
+  }
+
+  motion {
+    enter {
+      opacity: 0
+      y: 20
+      duration: 0.4
+    }
+    hover {
+      scale: 1.01
+    }
+  }
+
+  render {
+    <div>{children}</div>
+  }
+}

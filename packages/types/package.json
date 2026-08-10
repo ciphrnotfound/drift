@@ -1,0 +1,54 @@
+{
+  "name": "@drift/types",
+  "version": "0.1.0",
+  "description": "Shared TypeScript types for Drift framework",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drift-framework/drift.git",
+    "directory": "packages/types"
+  },
+  "bugs": {
+    "url": "https://github.com/drift-framework/drift/issues"
+  },
+  "homepage": "https://github.com/drift-framework/drift#readme",
+  "author": "Drift contributors",
+  "keywords": [
+    "drift",
+    "react",
+    "framework",
+    "compiler",
+    "styling",
+    "animation",
+    "tokens",
+    "design-system",
+    "frontend",
+    "routing",
+    "design-tokens",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

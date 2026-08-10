@@ -1,0 +1,19 @@
+component LanguagePage {
+  metadata {
+    title: "Drift Language - Components, Style, Motion, and Metadata"
+    description: "Drift language pages combine typed props, scoped styling, motion, render trees, and route metadata in one compiled frontend source."
+    keywords: "drift language, frontend language, typed ui, scoped css"
+  }
+
+  style {
+    layout: col
+    min-height: 100vh
+  }
+
+  render {
+    <main>
+      <h1>Drift Language</h1>
+      <p>One source for components, styling, motion, and metadata.</p>
+    </main>
+  }
+}
