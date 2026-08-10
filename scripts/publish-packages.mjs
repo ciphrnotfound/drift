@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const otp = process.env.NPM_OTP || process.env.NPM_CONFIG_OTP || ''
 const packageFolders = [
   'types',
   'motion-runtime',
@@ -63,7 +64,9 @@ for (const folder of packageFolders) {
   }
 
   console.log(`[publish] Publishing ${spec}...`)
-  await run('pnpm', ['publish', '--access', 'public', '--no-git-checks'], cwd)
+  const publishArgs = ['publish', '--access', 'public', '--no-git-checks']
+  if (otp) publishArgs.push('--otp', otp)
+  await run('pnpm', publishArgs, cwd)
 }
 
 console.log('[publish] All Drift packages are available on npm.')

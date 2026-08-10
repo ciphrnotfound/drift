@@ -30,6 +30,16 @@ pnpm release:publish
 
 The publishing script releases packages in dependency order and skips versions that are already present. This makes recovery from an interrupted publish possible without overwriting released artifacts.
 
+If npm requests a one-time password, provide a current authenticator code through the environment for that publish attempt:
+
+```powershell
+$env:NPM_OTP = Read-Host 'npm authenticator code'
+pnpm release:publish
+Remove-Item Env:NPM_OTP
+```
+
+For a long multi-package release, a granular npm access token with publish permission and two-factor bypass can avoid rotating codes. Keep it in your user npm configuration or CI secret; never commit it to this repository.
+
 After publishing, create a clean temporary project and verify:
 
 ```bash
