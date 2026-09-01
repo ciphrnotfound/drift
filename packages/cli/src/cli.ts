@@ -5,6 +5,7 @@ import { dev } from './commands/dev'
 import { build } from './commands/build'
 import { exportStatic } from './commands/export'
 import { createApp } from './commands/create-app'
+import { doctor } from './commands/doctor'
 
 const program = new Command()
 
@@ -22,6 +23,15 @@ program
   .option('--pnpm', 'Use pnpm')
   .option('--no-install', 'Skip dependency installation')
   .action(createApp)
+
+program
+  .command('doctor')
+  .description('Check a Drift project for common configuration and deployment problems')
+  .option('--json', 'Print a machine-readable report')
+  .option('--strict', 'Treat warnings as failures')
+  .action(async options => {
+    await doctor(options)
+  })
 
 // drift dev command
 program

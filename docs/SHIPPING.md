@@ -10,6 +10,8 @@ Run the same gate used by CI:
 pnpm release:check
 ```
 
+For a fast project-level configuration check, run `drift doctor`. Use `--json` for CI tooling and `--strict` when warnings should fail a build.
+
 The gate type-checks all packages, runs unit and integration tests, builds every package and the example app, enforces compressed bundle budgets, and runs Chromium navigation, responsive, metadata, recovery, and axe accessibility tests.
 
 ## Completed Alpha Gate

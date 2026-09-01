@@ -182,6 +182,7 @@ Useful commands:
 
 ```bash
 pnpm dev             # Run the example app
+pnpm drift doctor    # Check project configuration and deployment readiness
 pnpm test            # Unit and integration tests
 pnpm test:e2e        # Browser tests
 pnpm type-check      # TypeScript checks
