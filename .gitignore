@@ -11,6 +11,14 @@ example-app/compiled/
 *.tsbuildinfo
 *.tgz
 
+# Internal task notes kept out of the public repository
+TASK9-COMPLETION-SUMMARY.md
+CURLY-BRACE-MIGRATION-PROGRESS.md
+CURLY-BRACE-MIGRATION-COMPLETE.md
+TESTING-AND-NEXT-STEPS.md
+DRIFT-STATUS.md
+SUMMARY.md
+
 # Test coverage
 coverage/
 playwright-report/

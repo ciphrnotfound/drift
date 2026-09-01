@@ -44,6 +44,8 @@ vercel deploy --prebuilt
 
 This creates `.vercel/output` for a CDN-hosted Drift application with working client routes. API handlers can use `createVercelHandler` from `@drift/server/vercel`; automatic SSR function bundling remains a 1.0 blocker.
 
+For a Git-connected Vercel project, set Root Directory to the repository root. The checked-in `vercel.json` builds workspace packages before generating the root `.vercel/output` artifact. Do not set Root Directory to `example-app` for this monorepo deployment.
+
 ## Release Claim
 
 Use "deployable public alpha" for 0.1. Do not claim production stability, guaranteed backward compatibility, or superiority to mature frameworks until the stable blockers above are complete and measured independently.

@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "pnpm --filter drift-example-app dev",
     "build": "node scripts/release-check.mjs --build",
+    "vercel-build": "node scripts/vercel-build.mjs",
     "test": "vitest",
     "test:e2e": "playwright test",
     "test:budgets": "node scripts/check-budgets.mjs",
