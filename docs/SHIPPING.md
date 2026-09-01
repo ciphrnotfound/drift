@@ -20,7 +20,7 @@ The gate type-checks all packages, runs unit and integration tests, builds every
 - SSR loader execution, error status propagation, XSS-safe hydration data, and client hydration helpers.
 - History scroll restoration, query/hash preservation, 404 recovery, route metadata, and responsive browser tests.
 - Server-only environment access, same-origin actions, body limits, input parsing, authorization hooks, middleware, and request IDs.
-- Vercel Build Output API v3 static artifacts and a Fetch-standard Vercel Function handler adapter.
+- Vercel Build Output API v3 artifacts with automatic SSR Function bundling when `ssr.enabled` is set.
 - Node 18/20/22 CI, a compatibility manifest, bundle budgets, and serious/critical WCAG automation.
 
 ## Before Stable 1.0
@@ -28,7 +28,6 @@ The gate type-checks all packages, runs unit and integration tests, builds every
 - Freeze the `.drift` grammar and publish migration/codemod and deprecation policies.
 - Add Firefox and WebKit gates, React 19, Vite 6+, and Tailwind 4 compatibility.
 - Self-host Google font files during production builds instead of relying on the Google stylesheet endpoint.
-- Generate an integrated SSR Vercel Function bundle; 0.1 currently emits a static app and exposes the server handler adapter separately.
 - Complete keyboard/screen-reader conformance for every optional UI primitive.
 - Add package provenance, signed releases, changelog automation, private vulnerability reporting, and Linux/macOS/Windows CLI CI.
 - Publish reference server integrations for Supabase and Firebase with explicit auth and authorization examples.
@@ -42,7 +41,7 @@ drift build --target vercel
 vercel deploy --prebuilt
 ```
 
-This creates `.vercel/output` for a CDN-hosted Drift application with working client routes. API handlers can use `createVercelHandler` from `@drift/server/vercel`; automatic SSR function bundling remains a 1.0 blocker.
+This creates `.vercel/output` for a CDN-hosted Drift application with working client routes. When `ssr.enabled` is set in `drift.config.ts`, Drift also bundles `src/entry.server.tsx` into a Node.js Vercel Function and routes document requests through it. API handlers can use `createVercelHandler` from `@drift/server/vercel`.
 
 For a Git-connected Vercel project, set Root Directory to the repository root. The checked-in `vercel.json` builds workspace packages before generating the root `.vercel/output` artifact. Do not set Root Directory to `example-app` for this monorepo deployment.
 

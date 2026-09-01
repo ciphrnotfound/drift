@@ -5,6 +5,10 @@ export interface VercelOutputOptions {
   rootDir: string
   staticDir: string
   frameworkVersion?: string
+  server?: {
+    entry: string
+    runtime?: string
+  }
 }
 
 interface VercelBuildOutputConfig {
@@ -25,7 +29,28 @@ export async function emitVercelOutput(options: VercelOutputOptions): Promise<st
 
   await fs.promises.rm(outputRoot, { recursive: true, force: true })
   await fs.promises.mkdir(outputRoot, { recursive: true })
-  await fs.promises.cp(source, staticOutput, { recursive: true })
+  await fs.promises.cp(source, staticOutput, {
+    recursive: true,
+    filter: sourcePath => !options.server || path.resolve(sourcePath) !== path.join(source, 'index.html'),
+  })
+
+  if (options.server) {
+    const functionDir = path.join(outputRoot, 'functions', 'render.func')
+    if (!fs.existsSync(options.server.entry)) {
+      throw new Error(`Vercel SSR output requires server entry ${options.server.entry}`)
+    }
+
+    await fs.promises.mkdir(functionDir, { recursive: true })
+    await fs.promises.cp(path.dirname(options.server.entry), functionDir, { recursive: true })
+    await fs.promises.rename(path.join(functionDir, path.basename(options.server.entry)), path.join(functionDir, 'index.js'))
+    await fs.promises.writeFile(path.join(functionDir, 'package.json'), '{"type":"module"}\n', 'utf8')
+    await fs.promises.writeFile(path.join(functionDir, '.vc-config.json'), `${JSON.stringify({
+      runtime: options.server.runtime || 'nodejs22.x',
+      handler: 'index.js',
+      launcherType: 'Nodejs',
+      shouldAddSourcemapSupport: true,
+    }, null, 2)}\n`, 'utf8')
+  }
 
   const config: VercelBuildOutputConfig = {
     version: 3,
@@ -49,7 +74,7 @@ export async function emitVercelOutput(options: VercelOutputOptions): Promise<st
         continue: true,
       },
       { handle: 'filesystem' },
-      { src: '/.*', dest: '/index.html' },
+      options.server ? { src: '/.*', dest: '/render' } : { src: '/.*', dest: '/index.html' },
     ],
   }
 

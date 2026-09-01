@@ -34,4 +34,28 @@ describe('Vercel deployment output', () => {
     await fs.promises.mkdir(path.join(root, 'dist'))
     await expect(emitVercelOutput({ rootDir: root, staticDir: 'dist' })).rejects.toThrow('index.html')
   })
+
+  test('emits a Node.js SSR function and routes document requests to it', async () => {
+    const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'drift-vercel-'))
+    roots.push(root)
+    const serverDir = path.join(root, '.drift', 'server')
+    await fs.promises.mkdir(path.join(root, 'dist', 'assets'), { recursive: true })
+    await fs.promises.mkdir(serverDir, { recursive: true })
+    await fs.promises.writeFile(path.join(root, 'dist', 'index.html'), '<main>Drift</main>')
+    await fs.promises.writeFile(path.join(root, 'dist', 'assets', 'app.js'), 'export {}')
+    await fs.promises.writeFile(path.join(serverDir, 'entry-server.js'), 'export default () => new Response()')
+
+    const output = await emitVercelOutput({
+      rootDir: root,
+      staticDir: 'dist',
+      server: { entry: path.join(serverDir, 'entry-server.js') },
+    })
+    const config = JSON.parse(await fs.promises.readFile(path.join(output, 'config.json'), 'utf8'))
+    const functionConfig = JSON.parse(await fs.promises.readFile(path.join(output, 'functions', 'render.func', '.vc-config.json'), 'utf8'))
+
+    expect(await fs.promises.readFile(path.join(output, 'functions', 'render.func', 'index.js'), 'utf8')).toContain('Response')
+    await expect(fs.promises.access(path.join(output, 'static', 'index.html'))).rejects.toThrow()
+    expect(config.routes.at(-1)).toEqual({ src: '/.*', dest: '/render' })
+    expect(functionConfig).toMatchObject({ runtime: 'nodejs22.x', handler: 'index.js', launcherType: 'Nodejs' })
+  })
 })

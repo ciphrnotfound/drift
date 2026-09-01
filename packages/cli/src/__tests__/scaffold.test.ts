@@ -18,11 +18,14 @@ describe('create app scaffold', () => {
     await scaffoldApp(root, 'full')
 
     const main = await fs.promises.readFile(path.join(root, 'src', 'main.tsx'), 'utf8')
+    const serverEntry = await fs.promises.readFile(path.join(root, 'src', 'entry.server.tsx'), 'utf8')
     const home = await fs.promises.readFile(path.join(root, 'pages', 'index.drift'), 'utf8')
     const layout = await fs.promises.readFile(path.join(root, 'layouts', 'root.drift'), 'utf8')
     const packageJson = JSON.parse(await fs.promises.readFile(path.join(root, 'package.json'), 'utf8'))
 
     expect(main).toContain("from 'virtual:drift-routes'")
+    expect(main).toContain('hydrateDriftRouter')
+    expect(serverEntry).toContain('renderToHTML')
     expect(compile(home, { filename: 'pages/index.drift' }).errors).toEqual([])
     expect(compile(layout, { filename: 'layouts/root.drift' }).errors).toEqual([])
     expect(packageJson.scripts['build:vercel']).toBe('drift build --target vercel')

@@ -22,7 +22,7 @@ Build a production bundle:
 npm run build
 ```
 
-Build and deploy through Vercel's Build Output API:
+Build and deploy through Vercel's Build Output API. Set `ssr.enabled` in `drift.config.ts` to include a generated Node.js SSR Function:
 
 ```bash
 npm run build:vercel

@@ -47,6 +47,7 @@ export async function scaffoldApp(projectDir: string, template: DriftTemplate = 
     'index.html': indexHtml,
     '.gitignore': gitignore,
     'src/main.tsx': mainSource,
+    'src/entry.server.tsx': serverEntrySource,
     'src/vite-env.d.ts': viteTypes,
     'src/global.css': globalCss,
     'pages/index.drift': homePage,
@@ -104,6 +105,7 @@ export default {
   styles: { scoping: 'component', prefix: 'drift' },
   build: { outDir: 'dist', sourcemap: false },
   router: { basePath: '/' },
+  ssr: { enabled: true, streaming: false },
   dev: { port: 3000, host: 'localhost', open: false },
 } satisfies DriftConfig
 `
@@ -183,17 +185,26 @@ out
 *.log
 `
 
-const mainSource = `import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { Router } from '@drift/router/client'
+const mainSource = `import { hydrateDriftRouter } from '@drift/router/client'
 import { routes, layouts } from 'virtual:drift-routes'
 import './global.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Router routes={routes} layouts={layouts} />
-  </React.StrictMode>
-)
+hydrateDriftRouter(document.getElementById('root')!, routes, layouts)
+`
+
+const serverEntrySource = `import { renderToHTML } from '@drift/router'
+import { routes, layouts } from 'virtual:drift-routes'
+
+export async function render(request: Request) {
+  const url = new URL(request.url)
+  return renderToHTML(
+    \`${'${url.pathname}${url.search}${url.hash}'}\`,
+    routes,
+    layouts,
+    undefined,
+    { request, origin: url.origin },
+  )
+}
 `
 
 const viteTypes = `/// <reference types="vite/client" />

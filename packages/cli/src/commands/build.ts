@@ -85,14 +85,82 @@ export async function build(options: BuildOptions) {
     await displayBuildStats(path.join(rootDir, outDir))
 
     if (options.target === 'vercel') {
-      const vercelOutput = await emitVercelOutput({ rootDir, staticDir: outDir })
+      const serverEntry = driftConfig?.ssr?.enabled
+        ? await buildVercelSSR(rootDir, outDir)
+        : undefined
+      const vercelOutput = await emitVercelOutput({
+        rootDir,
+        staticDir: outDir,
+        server: serverEntry ? { entry: serverEntry } : undefined,
+      })
       console.log(`\x1b[34mVercel:\x1b[0m ${vercelOutput}`)
+      if (serverEntry) console.log('\x1b[32mSSR:\x1b[0m bundled as a Vercel Function')
       console.log('Deploy with: vercel deploy --prebuilt')
     }
   } catch (error) {
     console.error('❌ Build failed:', error instanceof Error ? error.message : error)
     process.exit(1)
   }
+}
+
+async function buildVercelSSR(rootDir: string, outDir: string): Promise<string> {
+  const applicationEntry = path.join(rootDir, 'src', 'entry.server.tsx')
+  if (!fs.existsSync(applicationEntry)) {
+    throw new Error('SSR is enabled but src/entry.server.tsx is missing. Run `drift create` or add an SSR entry that exports render(request).')
+  }
+
+  const clientShell = await fs.promises.readFile(path.join(rootDir, outDir, 'index.html'), 'utf8')
+  const buildDir = path.join(rootDir, '.drift', 'vercel-ssr')
+  const wrapper = path.join(buildDir, 'entry.ts')
+  const serverDir = path.join(buildDir, 'server')
+  await fs.promises.mkdir(buildDir, { recursive: true })
+  await fs.promises.writeFile(wrapper, createSSRWrapper(applicationEntry, clientShell), 'utf8')
+
+  await viteBuild({
+    root: rootDir,
+    configFile: false,
+    plugins: [
+      drift({ tokensPath: path.join(rootDir, 'drift.tokens'), sourceMaps: false }),
+      react(),
+    ],
+    ssr: { noExternal: true },
+    build: {
+      ssr: wrapper,
+      outDir: serverDir,
+      emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          entryFileNames: 'entry-server.js',
+          inlineDynamicImports: true,
+        },
+      },
+    },
+  })
+
+  return path.join(serverDir, 'entry-server.js')
+}
+
+function createSSRWrapper(applicationEntry: string, clientShell: string): string {
+  return `import { render as renderApplication } from ${JSON.stringify(applicationEntry.replace(/\\/g, '/'))}
+
+const clientShell = ${JSON.stringify(clientShell)}
+
+export default async function fetch(request) {
+  const result = await renderApplication(request)
+  const document = clientShell
+    .replace(/<head([^>]*)>/i, '<head$1>' + result.head)
+    .replace(/<div\\s+id=["']root["']\\s*><\\/div>/i, '<div id="root">' + result.html + '</div>')
+    .replace('</body>', result.hydrationScript + '</body>')
+
+  return new Response(document, {
+    status: result.status,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'x-content-type-options': 'nosniff',
+    },
+  })
+}
+`
 }
 
 /**
