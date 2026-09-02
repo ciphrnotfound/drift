@@ -1,5 +1,5 @@
-# Drift
-
+ # Drift
+ 
 **A frontend language for structure, scoped styles, motion, routing, and metadata.**
 
 Drift compiles `.drift` components into typed React, optimized CSS, and declarative motion. It includes file-based routing, route loaders, development diagnostics, font loading, design tokens, optional Tailwind CSS integration, static export, and Vercel Build Output API support.
