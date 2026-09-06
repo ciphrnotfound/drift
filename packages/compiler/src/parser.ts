@@ -364,12 +364,22 @@ export class Parser {
     let duration: number | undefined
     let delay: number | undefined
     let easing: string | undefined
+    let transitionType: AnimationDeclaration['transitionType']
+    let stiffness: number | undefined
+    let damping: number | undefined
+    let mass: number | undefined
+    let bounce: number | undefined
+    let velocity: number | undefined
+    let repeat: number | undefined
+    let repeatType: AnimationDeclaration['repeatType']
+    let repeatDelay: number | undefined
 
     while (!this.check(TokenType.RBRACE) && !this.isAtEnd()) {
       this.skipNewlines()
       if (this.check(TokenType.RBRACE)) break
 
-      const propName = this.consume(TokenType.IDENTIFIER, 'Expected property name').value
+      const propToken = this.consume(TokenType.IDENTIFIER, 'Expected property name')
+      const propName = propToken.value
 
       if (this.check(TokenType.COLON)) {
         this.advance()
@@ -378,14 +388,59 @@ export class Parser {
       const valueStr = this.parseStyleValue()
       const value = typeof valueStr === 'string' ? valueStr : valueStr.path.join('.')
 
+      const numberValue = () => {
+        const parsed = Number(value)
+        if (!Number.isFinite(parsed) || parsed < 0) {
+          const location = this.createLocation(propToken.position.offset, this.peek().position.offset)
+          this.errorCollector.error({
+            code: ErrorCode.MOTION_INVALID_DURATION,
+            message: `Motion ${propName} must be a non-negative number`,
+            file: this.filename,
+            location,
+            suggestions: [`Use a numeric value such as ${propName}: 0.2`],
+          })
+          throw new Error(`Invalid motion ${propName}`)
+        }
+        return parsed
+      }
+
       if (propName === 'duration') {
-        duration = parseFloat(value)
+        duration = numberValue()
       } else if (propName === 'delay') {
-        delay = parseFloat(value)
+        delay = numberValue()
       } else if (propName === 'easing') {
         easing = value
+      } else if (propName === 'type') {
+        if (!['tween', 'spring', 'inertia'].includes(value)) {
+          const location = this.createLocation(propToken.position.offset, this.peek().position.offset)
+          this.errorCollector.error({ code: ErrorCode.MOTION_INVALID_PROPERTY, message: `Unknown motion type "${value}"`, file: this.filename, location, suggestions: ['Use tween, spring, or inertia'] })
+          throw new Error(`Invalid motion type ${value}`)
+        }
+        transitionType = value as AnimationDeclaration['transitionType']
+      } else if (propName === 'stiffness') {
+        stiffness = numberValue()
+      } else if (propName === 'damping') {
+        damping = numberValue()
+      } else if (propName === 'mass') {
+        mass = numberValue()
+      } else if (propName === 'bounce') {
+        bounce = numberValue()
+      } else if (propName === 'velocity') {
+        velocity = numberValue()
+      } else if (propName === 'repeat') {
+        repeat = value === 'Infinity' ? Infinity : numberValue()
+      } else if (propName === 'repeatType') {
+        if (!['loop', 'reverse', 'mirror'].includes(value)) {
+          const location = this.createLocation(propToken.position.offset, this.peek().position.offset)
+          this.errorCollector.error({ code: ErrorCode.MOTION_INVALID_PROPERTY, message: `Unknown repeat type "${value}"`, file: this.filename, location, suggestions: ['Use loop, reverse, or mirror'] })
+          throw new Error(`Invalid repeat type ${value}`)
+        }
+        repeatType = value as AnimationDeclaration['repeatType']
+      } else if (propName === 'repeatDelay') {
+        repeatDelay = numberValue()
       } else {
-        properties.push({ name: propName, to: value })
+        const motionValue = /^-?\d+(?:\.\d+)?$/.test(value) ? Number(value) : value
+        properties.push({ name: propName, to: motionValue })
       }
     }
 
@@ -395,6 +450,15 @@ export class Parser {
       duration,
       delay,
       easing,
+      transitionType,
+      stiffness,
+      damping,
+      mass,
+      bounce,
+      velocity,
+      repeat,
+      repeatType,
+      repeatDelay,
       location: this.createLocation(start.offset, this.peek().position.offset),
     }
   }

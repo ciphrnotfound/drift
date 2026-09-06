@@ -124,7 +124,7 @@ export class Lexer {
     }
 
     // Numbers
-    if (this.isDigit(char)) {
+    if (this.isDigit(char) || (char === '-' && this.isDigit(this.peek()))) {
       this.scanNumber()
       return
     }
@@ -293,6 +293,8 @@ export class Lexer {
 
   private scanNumber(): void {
     const start = this.pos
+
+    if (this.current() === '-') this.advance()
 
     while (this.isDigit(this.current())) {
       this.advance()

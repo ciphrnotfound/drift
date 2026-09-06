@@ -161,4 +161,54 @@ component SearchAction {
     expect(tsx).toContain("createClient as createSupabaseClient")
     expect(tsx).toContain("initializeApp as initializeFirebase")
   })
+
+  test('compiles spring physics and per-gesture transitions', () => {
+    const source = `component SpringButton {
+  motion {
+    enter {
+      opacity: 0
+      y: 18
+      type: spring
+      stiffness: 260
+      damping: 22
+    }
+    hover {
+      y: -4
+      scale: 1.02
+      type: spring
+      stiffness: 420
+      damping: 28
+    }
+    press {
+      scale: 0.97
+      duration: 0.1
+    }
+  }
+  render { <button>Launch</button> }
+}`
+
+    const result = compile(source, { filename: 'SpringButton.drift' })
+    const tsx = result.files.find(file => file.path === 'SpringButton.tsx')?.content ?? ''
+
+    expect(result.errors).toEqual([])
+    expect(tsx).toContain('transition: { type: "spring", stiffness: 260, damping: 22 }')
+    expect(tsx).toContain('whileHover: { y: -4, scale: 1.02, transition: { type: "spring", stiffness: 420, damping: 28 } }')
+    expect(tsx).toContain('whileTap: { scale: 0.97, transition: { duration: 0.1 } }')
+  })
+
+  test('reports invalid motion transition values', () => {
+    const result = compile(`component BadMotion {
+  motion {
+    hover {
+      scale: 1.1
+      type: elastic
+    }
+  }
+  render { <button /> }
+}`, { filename: 'BadMotion.drift' })
+
+    expect(result.success).toBe(false)
+    expect(result.errors[0]?.code).toBe('DRIFT300')
+    expect(result.errors[0]?.message).toContain('Unknown motion type')
+  })
 })
