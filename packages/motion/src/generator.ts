@@ -255,6 +255,10 @@ export function generateTimingOptions(
     }
   }
 
+  if (animation.repeat !== undefined) options.iterations = animation.repeat === Infinity ? Infinity : animation.repeat + 1
+  if (animation.repeatType === 'reverse' || animation.repeatType === 'mirror') options.direction = 'alternate'
+  if (animation.repeatDelay !== undefined) options.endDelay = animation.repeatDelay
+
   return options
 }
 

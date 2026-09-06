@@ -2,6 +2,19 @@
 
 All notable Drift changes are documented here. Drift follows Semantic Versioning after `1.0`; during the public alpha, minor releases may include language and API migrations.
 
+## Unreleased
+
+### Added
+
+- Per-state motion transitions for enter, exit, hover, press, and focus
+- Spring physics with `stiffness`, `damping`, `mass`, `bounce`, and `velocity`
+- Repeating motion with repeat count, repeat delay, and loop, reverse, or mirror behavior
+- Signed numeric values for motion offsets and transforms
+
+### Changed
+
+- Invalid motion types, repeat modes, and negative timing values now produce compiler diagnostics
+
 ## [0.1.0] - 2026-08-10
 
 ### Added

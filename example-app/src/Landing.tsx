@@ -9,7 +9,7 @@ const command = 'npm create drift-app@latest'
 const snippets = {
   Structure: `component ActionButton {\n  props {\n    label: string\n  }\n\n  render {\n    <button type="button">\n      {label}\n    </button>\n  }\n}`,
   Style: `component ActionButton {\n  style {\n    display: inline-flex\n    padding: 12px 24px\n    background: #245bff\n    color: #ffffff\n    border-radius: 6px\n\n    hover {\n      background: #1844cc\n    }\n  }\n}`,
-  Motion: `component ActionButton {\n  motion {\n    enter {\n      opacity: 0, y: 8, duration: 0.2\n    }\n    hover { y: -2 }\n    press { scale: 0.98 }\n  }\n\n  render {\n    <button>Make something great</button>\n  }\n}`,
+  Motion: `component ActionButton {\n  motion {\n    enter {\n      opacity: 0\n      y: 8\n      type: spring\n      stiffness: 260\n      damping: 22\n    }\n    hover {\n      y: -3\n      type: spring\n      stiffness: 420\n    }\n    press { scale: 0.97 }\n  }\n}`,
 }
 
 export function Landing() {

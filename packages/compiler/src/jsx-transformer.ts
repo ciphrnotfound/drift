@@ -233,15 +233,12 @@ function generateMotionProps(motion: MotionBlock): string {
     )
     entries.push(`  animate: { ${animateEntries.join(', ')} }`)
 
-    const trans: string[] = []
-    if (motion.enter.duration !== undefined) trans.push(`duration: ${motion.enter.duration}`)
-    if (motion.enter.easing !== undefined) trans.push(`ease: "${motion.enter.easing}"`)
-    if (motion.enter.delay !== undefined) trans.push(`delay: ${motion.enter.delay}`)
-    if (trans.length > 0) entries.push(`  transition: { ${trans.join(', ')} }`)
+    const transition = transitionToObj(motion.enter)
+    if (transition) entries.push(`  transition: ${transition}`)
   }
 
   if (motion.exit) {
-    entries.push(`  exit: ${animToObj(motion.exit)}`)
+    entries.push(`  exit: ${animToObj(motion.exit, true)}`)
   }
 
   const hasHover = motion.gestures.find(g => g.gesture === 'hover')
@@ -249,9 +246,9 @@ function generateMotionProps(motion: MotionBlock): string {
   const hasFocus = motion.gestures.find(g => g.gesture === 'focus')
   const hasDrag = motion.gestures.find(g => g.gesture === 'drag')
 
-  if (hasHover) entries.push(`  whileHover: ${animToObj(hasHover.animation)}`)
-  if (hasPress) entries.push(`  whileTap: ${animToObj(hasPress.animation)}`)
-  if (hasFocus) entries.push(`  whileFocus: ${animToObj(hasFocus.animation)}`)
+  if (hasHover) entries.push(`  whileHover: ${animToObj(hasHover.animation, true)}`)
+  if (hasPress) entries.push(`  whileTap: ${animToObj(hasPress.animation, true)}`)
+  if (hasFocus) entries.push(`  whileFocus: ${animToObj(hasFocus.animation, true)}`)
   if (hasDrag) entries.push(`  drag: true`)
 
   return `{\n${entries.join(',\n')}\n  }`
@@ -273,12 +270,31 @@ function naturalValue(prop: string): string | number {
   }
 }
 
-function animToObj(anim: AnimationDeclaration): string {
+function animToObj(anim: AnimationDeclaration, includeTransition = false): string {
   const entries = anim.properties.map(p => {
     const val = p.from !== undefined ? p.from : p.to
     return `${p.name}: ${JSON.stringify(val)}`
   })
+  const transition = includeTransition ? transitionToObj(anim) : null
+  if (transition) entries.push(`transition: ${transition}`)
   return `{ ${entries.join(', ')} }`
+}
+
+function transitionToObj(anim: AnimationDeclaration): string | null {
+  const entries: string[] = []
+  if (anim.transitionType !== undefined) entries.push(`type: ${JSON.stringify(anim.transitionType)}`)
+  if (anim.duration !== undefined) entries.push(`duration: ${anim.duration}`)
+  if (anim.easing !== undefined) entries.push(`ease: ${JSON.stringify(anim.easing)}`)
+  if (anim.delay !== undefined) entries.push(`delay: ${anim.delay}`)
+  if (anim.stiffness !== undefined) entries.push(`stiffness: ${anim.stiffness}`)
+  if (anim.damping !== undefined) entries.push(`damping: ${anim.damping}`)
+  if (anim.mass !== undefined) entries.push(`mass: ${anim.mass}`)
+  if (anim.bounce !== undefined) entries.push(`bounce: ${anim.bounce}`)
+  if (anim.velocity !== undefined) entries.push(`velocity: ${anim.velocity}`)
+  if (anim.repeat !== undefined) entries.push(`repeat: ${anim.repeat}`)
+  if (anim.repeatType !== undefined) entries.push(`repeatType: ${JSON.stringify(anim.repeatType)}`)
+  if (anim.repeatDelay !== undefined) entries.push(`repeatDelay: ${anim.repeatDelay}`)
+  return entries.length ? `{ ${entries.join(', ')} }` : null
 }
 
 interface ElementOptions {

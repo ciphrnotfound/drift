@@ -104,6 +104,15 @@ export interface AnimationDeclaration extends ASTNode {
   duration?: number
   delay?: number
   easing?: string
+  transitionType?: 'tween' | 'spring' | 'inertia'
+  stiffness?: number
+  damping?: number
+  mass?: number
+  bounce?: number
+  velocity?: number
+  repeat?: number
+  repeatType?: 'loop' | 'reverse' | 'mirror'
+  repeatDelay?: number
 }
 
 export interface AnimationProperty {

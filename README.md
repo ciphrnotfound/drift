@@ -52,9 +52,9 @@ component ActionButton {
   }
 
   motion {
-    enter { opacity: 0, y: 8, duration: 0.2 }
-    hover { y: -2 }
-    press { scale: 0.98 }
+    enter { opacity: 0, y: 8, type: spring, stiffness: 260, damping: 22 }
+    hover { y: -2, type: spring, stiffness: 420, damping: 28 }
+    press { scale: 0.98, duration: 0.1 }
   }
 
   render {
