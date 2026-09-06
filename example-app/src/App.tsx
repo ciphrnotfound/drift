@@ -4,6 +4,7 @@ import { Link, Router, useNavigation, useRoute } from '@drift/router/client'
 import { Accessibility, ArrowRight, Blocks, Boxes, Braces, Check, ChevronRight, CircleCheck, Cloud, Code2, Component, Copy, Database, FileCode2, Flame, Gauge, Github, Globe2, Layers3, LockKeyhole, Palette, Rocket, Route as RouteIcon, Search, Server, Sparkles, Terminal, Type, WandSparkles, Workflow, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { installDriftFonts, manrope } from './fonts'
+import { Landing } from './Landing'
 
 installDriftFonts()
 
@@ -57,9 +58,9 @@ function Shell({ children }: { children: React.ReactNode }) {
             <Link to="/language" activeClassName="active-link" pendingClassName="pending-link">Language</Link>
             <Link to="/seo" activeClassName="active-link" pendingClassName="pending-link">SEO</Link>
             <Link to="/ui" activeClassName="active-link" pendingClassName="pending-link">Components</Link>
-            <a href="#pricing">Pricing</a>
+            <a href="https://github.com/ciphrnotfound/drift/blob/main/README.md">Docs</a>
           </div>
-          <div className="nav-meta"><a href="https://github.com" className="icon-link" aria-label="GitHub"><Github size={16} /></a><Link to="/language" className="nav-action">Start building <ArrowRight size={14} /></Link></div>
+          <div className="nav-meta"><a href="https://github.com/ciphrnotfound/drift" className="icon-link" aria-label="GitHub"><Github size={16} /></a><Link to="/language" className="nav-action">Start building <ArrowRight size={14} /></Link></div>
         </nav>
         <AnimatePresence>{navigation.isNavigating && <motion.div className="route-progress" initial={{ scaleX: 0, opacity: 0 }} animate={{ scaleX: .82, opacity: 1 }} exit={{ scaleX: 1, opacity: 0 }} transition={{ duration: .22 }} />}</AnimatePresence>
       </header>
@@ -73,6 +74,11 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 function HomePage() {
+  usePageMeta('Drift - A language for beautiful frontends', 'Build React interfaces with structure, scoped styles, and motion in one component language. Explore the Drift public alpha.', '/')
+  return <Shell><Landing /></Shell>
+}
+
+function PreviousHomePage() {
   usePageMeta('Drift - The frontend language for the whole web', 'Build typed components, scoped styles, motion, routes, fonts, and static SEO in one frontend language.', '/')
 
   return (
