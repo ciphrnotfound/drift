@@ -1,5 +1,5 @@
 import { createElement, type ReactNode } from 'react'
-import { hydrateRoot, type Root } from 'react-dom/client'
+import { createRoot, hydrateRoot, type Root } from 'react-dom/client'
 import type { LayoutConfig, RouteConfig } from '@drift/types'
 import { Router, type RouterProps } from './Router'
 import { deserializeRouteError } from './runtime'
@@ -33,7 +33,10 @@ export function readHydrationData(
   const element = ownerDocument.getElementById(id)
   if (!element?.textContent) return null
   try {
-    return JSON.parse(element.textContent) as DriftHydrationPayload
+    const payload = JSON.parse(element.textContent)
+    if (!payload || typeof payload.path !== 'string' || !payload.path.startsWith('/') ||
+        !payload.data || typeof payload.data !== 'object' || Array.isArray(payload.data)) return null
+    return payload as DriftHydrationPayload
   } catch {
     return null
   }
@@ -46,14 +49,20 @@ export function hydrateDriftRouter(
   props: Omit<RouterProps, 'routes' | 'layouts' | 'initialPath' | 'initialData' | 'initialError'> = {}
 ): Root {
   const payload = readHydrationData(container.ownerDocument || document)
-  return hydrateRoot(container, createElement(Router, {
+  const app = createElement(Router, {
     ...props,
     routes,
     layouts,
     initialPath: payload?.path,
     initialData: payload?.data,
     initialError: payload?.error ? deserializeRouteError(payload.error) : undefined,
-  }))
+  })
+  if (payload) return hydrateRoot(container, app)
+
+  // Development and static builds have no SSR payload to hydrate.
+  const root = createRoot(container)
+  root.render(app)
+  return root
 }
 
 export function hydrateDriftApp(container: Element, app: ReactNode): Root {
