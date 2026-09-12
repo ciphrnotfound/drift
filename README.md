@@ -1,8 +1,10 @@
  # Drift
  
-**A frontend language for structure, scoped styles, motion, routing, and metadata.**
+**A TypeScript application runtime for structure, scoped styles, motion, routing, and metadata.**
 
 Drift compiles `.drift` components into typed React, optimized CSS, and declarative motion. It includes file-based routing, route loaders, development diagnostics, font loading, design tokens, optional Tailwind CSS integration, static export, and Vercel Build Output API support.
+
+The long-term direction is broader: Drift is building a statically inspectable application graph for routes, actions, services, resources, policies, workers, and runtime boundaries. The graph is experimental today, but it is already available through `drift graph` and `drift graph --json`.
 
 > Drift `0.1` is a public alpha. It is ready for experiments, prototypes, and early adopters, but its language grammar and framework APIs are not yet covered by a 1.0 stability guarantee. Read the [shipping status](./docs/SHIPPING.md) before using it in production.
 
@@ -79,6 +81,19 @@ The compiler produces:
 **Use the React ecosystem.** Standard ESM imports are preserved, so Drift components can use shadcn/ui, Lucide, Hugeicons, Supabase, Firebase, and other tree-shakeable React libraries.
 
 **Deployment is portable.** Build a normal Vite application, export static HTML, or emit Vercel Build Output API v3 artifacts.
+
+**Application architecture is inspectable.** Drift can discover the routes, pages, components, services, actions, policies, and resources in a project as a deterministic graph. This is the first step toward compiled dependency validation, capability checks, runtime planning, and better tooling.
+
+## Application Graph
+
+Inspect the architecture of the current project:
+
+```bash
+drift graph
+drift graph --json
+```
+
+The JSON form is versioned and deterministic so it can be used by tests, editor tooling, and coding agents. The graph is currently a discovery/inspection layer; it does not yet claim to compile or enforce every relationship in the application.
 
 ## Routing
 
@@ -167,6 +182,7 @@ This works with Lucide, Hugeicons, shadcn/ui, and other React component librarie
 | `@drift/seo` | Server-renderable metadata generation |
 | `@drift/ui` | Optional accessible React primitives |
 | `@drift/types` | Shared public TypeScript contracts |
+| `@drift/graph` | Deterministic application graph and DIR discovery |
 
 ## Local Development
 
