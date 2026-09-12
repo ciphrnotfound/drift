@@ -2,6 +2,7 @@
 import type { Plugin, ViteDevServer, HmrContext, ModuleNode } from 'vite'
 import { transformWithEsbuild } from 'vite'
 import { compile, type CompileOptions } from '@drift/compiler'
+import type { CompilationResult } from '@drift/types'
 import { generateRoutes, buildLayoutHierarchy, associateRoutesWithLayouts } from '@drift/router'
 import type { TokenRegistry, RouteConfig, LayoutConfig } from '@drift/types'
 import { parseTokens } from '@drift/tokens'
@@ -49,9 +50,21 @@ export function drift(options: DriftPluginOptions = {}): Plugin {
 
   // Cache for compiled files to track dependencies
   const driftFileCache = new Map<string, Set<string>>()
+  // Vite requests generated JS and CSS separately. Retain one compiler result for
+  // both requests so a source update only pays for parsing and codegen once.
+  const compiledOutputCache = new Map<string, { source: string; result: CompilationResult }>()
 
   const virtualRoutesId = 'virtual:drift-routes'
   const resolvedVirtualRoutesId = '\0' + virtualRoutesId
+
+  function compileCached(code: string, id: string, compileOptions: CompileOptions): CompilationResult {
+    const cached = compiledOutputCache.get(id)
+    if (cached?.source === code) return cached.result
+
+    const result = compile(code, compileOptions)
+    compiledOutputCache.set(id, { source: code, result })
+    return result
+  }
 
   return {
     name: 'drift',
@@ -153,7 +166,7 @@ export function drift(options: DriftPluginOptions = {}): Plugin {
           },
         }
 
-        const result = compile(code, compileOptions)
+        const result = compileCached(code, id, compileOptions)
 
         // Handle compilation errors
         if (!result.success || result.errors.length > 0) {
@@ -245,6 +258,7 @@ export function drift(options: DriftPluginOptions = {}): Plugin {
       if (resolvedTokensPath && file === resolvedTokensPath) {
         // Reload token registry
         tokenRegistry = await loadTokenRegistry(resolvedTokensPath)
+        compiledOutputCache.clear()
 
         // Find all .drift files and trigger recompilation
         const driftModules: ModuleNode[] = []
@@ -266,6 +280,7 @@ export function drift(options: DriftPluginOptions = {}): Plugin {
 
       // Handle .drift file changes
       if (file.endsWith('.drift')) {
+        compiledOutputCache.delete(file)
         // Invalidate the module
         modules.forEach(mod => {
           server.moduleGraph.invalidateModule(mod)
@@ -346,7 +361,7 @@ export const manifest = { routes, layouts }`
 
         try {
           const code = await fs.promises.readFile(driftFile, 'utf-8')
-          const result = compile(code, {
+          const result = compileCached(code, driftFile, {
             filename: driftFile,
             tokenRegistry,
           })
