@@ -316,8 +316,8 @@ function NotFoundPage() { usePageMeta('404 - Route not found | Drift', 'The requ
 function FeatureBand({ items }: { items: Array<[LucideIcon, string]> }) { return <div className="feature-band">{items.map(([Icon,label])=><span key={label}><Icon size={15}/>{label}</span>)}</div> }
 function Artifact({ icon: Icon, name, format }: { icon: LucideIcon; name: string; format: string }) { return <motion.article whileHover={{y:-5}}><Icon size={18}/><strong>{name}</strong><span>{format}</span><CircleCheck size={14}/></motion.article> }
 function MouseRouteIcon() { return <RouteIcon size={18}/> }
+function DriftLogo({ large = false }: { large?: boolean }) { return <span className={`brand-mark ${large ? 'large' : ''}`} aria-hidden="true"><img src="/drift-symbol.png" alt="" /></span> }
 
-function DriftLogo({ large = false }: { large?: boolean }) { return <span className={`brand-mark ${large ? 'large' : ''}`} aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path className="drift-ring" d="M11 5h6.5C23.3 5 27 9.2 27 16s-3.7 11-9.5 11H11V5Z"/><path className="drift-stem" d="M11 10v12h6.1c2.9 0 4.9-2.1 4.9-6s-2-6-4.9-6H11Z"/><path className="drift-wake" d="M3 10h8M1.5 16H11M3 22h8"/></svg></span> }
 function Reveal({ children }: { children: React.ReactNode }) { return <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} variants={sectionReveal}>{children}</motion.div> }
 function Metric({ value, label }: { value: string; label: string }) { return <div className="metric"><strong>{value}</strong><span>{label}</span></div> }
 function SectionLabel({ label, count }: { label: string; count: string }) { return <div className="section-label section-frame"><span>{label}</span><b>{count}</b></div> }
