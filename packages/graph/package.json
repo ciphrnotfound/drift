@@ -1,0 +1,35 @@
+{
+  "name": "@drift/graph",
+  "version": "0.1.0",
+  "description": "Drift application graph and DIR discovery",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "files": ["dist"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciphrnotfound/drift.git",
+    "directory": "packages/graph"
+  },
+  "bugs": {
+    "url": "https://github.com/ciphrnotfound/drift/issues"
+  },
+  "homepage": "https://github.com/ciphrnotfound/drift#readme",
+  "author": "Drift contributors",
+  "keywords": ["drift", "application-graph", "compiler", "runtime", "tooling"],
+  "engines": { "node": ">=18.0.0" },
+  "publishConfig": { "access": "public" }
+}

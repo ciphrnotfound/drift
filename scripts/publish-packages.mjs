@@ -7,6 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const otp = process.env.NPM_OTP || process.env.NPM_CONFIG_OTP || ''
 const packageFolders = [
   'types',
+  'graph',
   'motion-runtime',
   'font',
   'style',

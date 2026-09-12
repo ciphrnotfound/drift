@@ -14,6 +14,7 @@ const scaffoldSmoke = join(root, 'scripts', 'scaffold-smoke.mjs')
 
 const packageNames = [
   'types',
+  'graph',
   'compiler',
   'font',
   'motion',
@@ -72,7 +73,7 @@ async function checkBudgets() {
 
 async function build() {
   const levels = [
-    ['types', 'motion-runtime'],
+    ['types', 'graph', 'motion-runtime'],
     ['style', 'tokens', 'font', 'motion', 'ui', 'router', 'seo', 'server'],
     ['compiler'],
     ['vite-plugin'],

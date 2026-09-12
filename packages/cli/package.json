@@ -33,6 +33,7 @@
     "@drift/seo": "workspace:*",
     "@drift/tokens": "workspace:*",
     "@drift/router": "workspace:*",
+    "@drift/graph": "workspace:*",
     "@drift/vite-plugin": "workspace:*",
     "commander": "^11.1.0",
     "vite": "^6.4.3",

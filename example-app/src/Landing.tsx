@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { motion, MotionConfig, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Check, Code2, Copy, Github, Layers3, MousePointer2, RotateCcw, Route, Sparkles, Terminal, Wand2 } from 'lucide-react'
 import { Link } from '@drift/router/client'

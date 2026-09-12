@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const packageFolders = [
   'types',
+  'graph',
   'motion-runtime',
   'font',
   'style',

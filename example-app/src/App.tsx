@@ -163,6 +163,8 @@ function PreviousHomePage() {
   )
 }
 
+void PreviousHomePage
+
 function SectionIntro({ eyebrow, title, text, inverse = false }: { eyebrow: string; title: string; text: string; inverse?: boolean }) { return <motion.div className={`dh-intro ${inverse ? 'inverse' : ''}`} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-100px' }} variants={staggerReveal}><motion.p className="dh-kicker" variants={itemReveal}>{eyebrow}</motion.p><motion.h2 variants={itemReveal}>{title}</motion.h2><motion.p variants={itemReveal}>{text}</motion.p></motion.div> }
 function PipelineStep({ icon: Icon, number, title, text }: { icon: LucideIcon; number: string; title: string; text: string }) { return <motion.article variants={itemReveal}><div><Icon size={19} /><span>{number}</span></div><h3>{title}</h3><p>{text}</p><motion.i animate={{ scaleX: [0, 1, 1], opacity: [0, 1, .25] }} transition={{ duration: 2.8, repeat: Infinity }} /></motion.article> }
 function Integration({ icon: Icon, name, detail, tone }: { icon: LucideIcon; name: string; detail: string; tone: string }) { return <motion.article variants={itemReveal}><span className={tone}><Icon size={19} /></span><div><h3>{name}</h3><p>{detail}</p></div><b>SDK READY</b></motion.article> }

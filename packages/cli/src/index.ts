@@ -2,6 +2,8 @@
 export { createApp } from './commands/create-app'
 export { doctor, inspectProject } from './commands/doctor'
 export type { DoctorCheck, DoctorLevel, DoctorOptions, DoctorReport } from './commands/doctor'
+export { graph } from './commands/graph'
+export type { GraphOptions } from './commands/graph'
 export { dev } from './commands/dev'
 export { build } from './commands/build'
 export { exportStatic } from './commands/export'

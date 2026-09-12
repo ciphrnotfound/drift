@@ -88,6 +88,9 @@ importers:
       '@drift/compiler':
         specifier: workspace:*
         version: link:../compiler
+      '@drift/graph':
+        specifier: workspace:*
+        version: link:../graph
       '@drift/router':
         specifier: workspace:*
         version: link:../router
@@ -145,6 +148,8 @@ importers:
       vitest:
         specifier: ^3.2.6
         version: 3.2.7(@types/node@20.19.39)(@vitest/ui@3.2.7)
+
+  packages/graph: {}
 
   packages/motion:
     dependencies:
