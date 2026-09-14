@@ -84,7 +84,7 @@ packages/
   vite-plugin/           # existing dev/build integration
 ```
 
-Add `packages/graph` because the application graph is a shared semantic contract used by the CLI, compiler, editor tooling, and eventually the Rust bridge. Keep it small and dependency-free.
+Add `packages/graph` because the application graph is a shared semantic contract used by the CLI, compiler, editor tooling, and eventually the Rust bridge. Keep it small; its TypeScript compiler API dependency is justified by source-accurate analysis.
 
 ### Later
 

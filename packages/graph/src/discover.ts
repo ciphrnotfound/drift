@@ -1,5 +1,6 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import ts from 'typescript'
 import type { DriftGraph, GraphEdge, GraphInput, GraphNode, GraphNodeKind } from './types'
 import { graphVersion } from './types'
 
@@ -74,42 +75,100 @@ function discoverDriftFile(source: string, relativePath: string, moduleId: strin
 }
 
 function discoverTypeScriptFile(source: string, relativePath: string, moduleId: string, nodes: Map<string, GraphNode>, edges: Map<string, GraphEdge>): void {
-  const declarations: Array<{ kind: GraphNodeKind; name: string; index: number }> = []
-  const patterns: Array<[GraphNodeKind, RegExp]> = [
-    ['service', /(?:@service\(\)\s*)?export\s+class\s+([A-Za-z_$][\w$]*)/g],
-    ['action', /export\s+const\s+([A-Za-z_$][\w$]*)\s*=\s*action\s*\(/g],
-    ['loader', /export\s+const\s+([A-Za-z_$][\w$]*)\s*=\s*loader\s*\(/g],
-    ['policy', /(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*=\s*policy\s*\(/g],
-    ['resource', /(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*=\s*resource\.([A-Za-z_$][\w$]*)\s*\(/g],
-    ['route', /export\s+const\s+([A-Za-z_$][\w$]*)\s*=\s*route\s*\(/g],
-  ]
+  const sourceFile = ts.createSourceFile(
+    relativePath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    relativePath.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  )
+  const declarations: TypeScriptDeclaration[] = []
 
-  for (const [kind, pattern] of patterns) {
-    for (const match of source.matchAll(pattern)) {
-      const name = kind === 'resource' ? `${match[1]} (${match[2]})` : match[1]!
-      declarations.push({ kind, name, index: match.index || 0 })
+  for (const statement of sourceFile.statements) {
+    if (ts.isClassDeclaration(statement) && statement.name && hasModifier(statement, ts.SyntaxKind.ExportKeyword) && isServiceClass(statement)) {
+      declarations.push({ kind: 'service', name: statement.name.text, index: statement.getStart(sourceFile), node: statement })
+      continue
+    }
+
+    if (!ts.isVariableStatement(statement)) continue
+    for (const variable of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(variable.name) || !variable.initializer) continue
+      const declaration = getCallDeclaration(variable.name.text, variable.initializer, variable.getStart(sourceFile))
+      if (declaration) declarations.push({ ...declaration, node: variable })
     }
   }
 
   for (const declaration of declarations.sort((a, b) => a.index - b.index)) {
     const nodeId = `${declaration.kind}:${relativePath}:${declaration.name}`
-    addNode(nodes, { id: nodeId, kind: declaration.kind, name: declaration.name, filePath: relativePath, line: lineNumber(source, declaration.index) })
+    addNode(nodes, {
+      id: nodeId,
+      kind: declaration.kind,
+      name: declaration.name,
+      filePath: relativePath,
+      line: lineNumber(source, declaration.index),
+      metadata: declaration.metadata,
+    })
     addEdge(edges, { from: moduleId, to: nodeId, kind: 'contains' })
 
-    const body = declarationBody(source, declaration.index)
-    const policy = body.match(/\bpolicy\s*:\s*([A-Za-z_$][\w$]*)/)
-    if (declaration.kind === 'action' && policy) connectByName(declaration, policy[1]!, 'protects', relativePath, declarations, nodes, edges)
-
-    for (const use of body.matchAll(/\buse\s*\(\s*([A-Za-z_$][\w$]*)/g)) {
-      connectByName(declaration, use[1]!, 'calls', relativePath, declarations, nodes, edges)
-    }
-    for (const resource of body.matchAll(/\bresource\.(postgres|redis|queue|storage)\s*\(/g)) {
-      connectByName(declaration, resource[1]!, 'requires_resource', relativePath, declarations, nodes, edges)
-    }
+    inspectRelationships(declaration, sourceFile, relativePath, declarations, nodes, edges)
   }
 }
 
-function connectByName(source: { kind: GraphNodeKind; name: string }, targetName: string, kind: GraphEdge['kind'], relativePath: string, declarations: Array<{ kind: GraphNodeKind; name: string; index: number }>, nodes: Map<string, GraphNode>, edges: Map<string, GraphEdge>): void {
+interface TypeScriptDeclaration {
+  kind: GraphNodeKind
+  name: string
+  index: number
+  node: ts.Node
+  metadata?: Record<string, string | number | boolean>
+  resourceMethod?: string
+}
+
+function getCallDeclaration(name: string, initializer: ts.Expression, index: number): Omit<TypeScriptDeclaration, 'node'> | null {
+  if (!ts.isCallExpression(initializer)) return null
+
+  if (ts.isIdentifier(initializer.expression)) {
+    const kind = initializer.expression.text
+    if (kind === 'action' || kind === 'loader' || kind === 'policy' || kind === 'route') {
+      return { kind, name, index }
+    }
+  }
+
+  if (ts.isPropertyAccessExpression(initializer.expression) && ts.isIdentifier(initializer.expression.expression) && initializer.expression.expression.text === 'resource') {
+    const method = initializer.expression.name.text
+    return { kind: 'resource', name: `${name} (${method})`, index, resourceMethod: method, metadata: { provider: method } }
+  }
+
+  return null
+}
+
+function inspectRelationships(declaration: TypeScriptDeclaration, sourceFile: ts.SourceFile, relativePath: string, declarations: TypeScriptDeclaration[], nodes: Map<string, GraphNode>, edges: Map<string, GraphEdge>): void {
+  if (!ts.isVariableDeclaration(declaration.node)) return
+  const initializer = declaration.node.initializer
+  if (!initializer) return
+
+  const visit = (node: ts.Node): void => {
+    if (declaration.kind === 'action' && ts.isPropertyAssignment(node) && node.name.getText(sourceFile) === 'policy' && ts.isIdentifier(node.initializer)) {
+      connectByName(declaration, node.initializer.text, 'protects', relativePath, declarations, nodes, edges)
+    }
+
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+      const firstArgument = node.arguments[0]
+      if (node.expression.text === 'use' && firstArgument && ts.isIdentifier(firstArgument)) {
+        connectByName(declaration, firstArgument.text, 'calls', relativePath, declarations, nodes, edges)
+      }
+    }
+
+    if (declaration.kind !== 'resource' && ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && ts.isIdentifier(node.expression.expression) && node.expression.expression.text === 'resource') {
+      connectByName(declaration, node.expression.name.text, 'requires_resource', relativePath, declarations, nodes, edges)
+    }
+
+    ts.forEachChild(node, visit)
+  }
+
+  visit(initializer)
+}
+
+function connectByName(source: { kind: GraphNodeKind; name: string }, targetName: string, kind: GraphEdge['kind'], relativePath: string, declarations: TypeScriptDeclaration[], nodes: Map<string, GraphNode>, edges: Map<string, GraphEdge>): void {
   const target = declarations.find(candidate => candidate.name === targetName || candidate.name.startsWith(`${targetName} (`))
   if (!target) return
   const from = `${source.kind}:${relativePath}:${source.name}`
@@ -117,9 +176,16 @@ function connectByName(source: { kind: GraphNodeKind; name: string }, targetName
   if (nodes.has(from) && nodes.has(to)) addEdge(edges, { from, to, kind })
 }
 
-function declarationBody(source: string, start: number): string {
-  const next = source.indexOf('\nexport ', start + 1)
-  return source.slice(start, next === -1 ? source.length : next)
+function hasModifier(node: ts.Node, kind: ts.SyntaxKind): boolean {
+  return ts.canHaveModifiers(node) && (ts.getModifiers(node)?.some(modifier => modifier.kind === kind) ?? false)
+}
+
+function isServiceClass(node: ts.ClassDeclaration): boolean {
+  if (node.name?.text.endsWith('Service')) return true
+  return ts.getDecorators(node)?.some(decorator => {
+    const expression = decorator.expression
+    return ts.isCallExpression(expression) && ts.isIdentifier(expression.expression) && expression.expression.text === 'service'
+  }) ?? false
 }
 
 function routePath(relativePath: string): string {

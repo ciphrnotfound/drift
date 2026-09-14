@@ -7,6 +7,7 @@ import { exportStatic } from './commands/export'
 import { createApp } from './commands/create-app'
 import { doctor } from './commands/doctor'
 import { graph } from './commands/graph'
+import { check } from './commands/check'
 
 const program = new Command()
 
@@ -41,6 +42,16 @@ program
   .option('-r, --root <directory>', 'Project root', process.cwd())
   .action(async options => {
     await graph(options)
+  })
+
+program
+  .command('check')
+  .description('Validate the discovered Drift application graph')
+  .option('--json', 'Print a machine-readable report')
+  .option('--strict', 'Treat warnings as failures')
+  .option('-r, --root <directory>', 'Project root', process.cwd())
+  .action(async options => {
+    await check(options)
   })
 
 // drift dev command

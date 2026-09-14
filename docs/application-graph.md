@@ -4,7 +4,7 @@ The application graph is Drift's first architectural layer beyond individual com
 
 ## What It Represents
 
-The current graph (`0.1`) includes these node kinds:
+The current graph (`0.1`) includes these node kinds. TypeScript declarations are parsed with the TypeScript compiler API; `.drift` declarations continue to use Drift's existing source conventions.
 
 - application
 - module
@@ -29,6 +29,8 @@ From a Drift project:
 drift graph
 drift graph --json
 drift graph --root ./path/to/project --json
+drift check
+drift check --json
 ```
 
 The human output is optimized for a quick architecture scan. The JSON output is the contract for future graph tooling and is intentionally more stable than the display format.
@@ -42,7 +44,6 @@ That boundary is deliberate. The next layers can evolve the graph into DIR while
 ## Next Graph Milestones
 
 1. Add explicit public TypeScript declaration helpers for services, actions, resources, and policies.
-2. Parse those declarations through a compiler-owned AST pass instead of regular-expression discovery.
-3. Add graph diagnostics for missing dependencies and dependency cycles.
-4. Version a small DIR schema and expose `drift explain <node> --json`.
-5. Feed the graph into a Rust runtime planning boundary.
+2. Add diagnostics for missing dependencies and dependency cycles.
+3. Version a small DIR schema and expose `drift explain <node> --json`.
+4. Feed the graph into a Rust runtime planning boundary.
