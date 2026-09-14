@@ -149,7 +149,11 @@ importers:
         specifier: ^3.2.6
         version: 3.2.7(@types/node@20.19.39)(@vitest/ui@3.2.7)
 
-  packages/graph: {}
+  packages/graph:
+    dependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
 
   packages/motion:
     dependencies:

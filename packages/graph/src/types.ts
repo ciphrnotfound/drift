@@ -62,6 +62,17 @@ export interface DriftGraph {
   edges: GraphEdge[]
 }
 
+export type GraphDiagnosticSeverity = 'error' | 'warning'
+
+export interface GraphDiagnostic {
+  code: string
+  severity: GraphDiagnosticSeverity
+  message: string
+  nodeId?: string
+  filePath?: string
+  line?: number
+}
+
 export interface GraphSourceFile {
   path: string
   source: string
