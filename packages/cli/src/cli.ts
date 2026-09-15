@@ -8,6 +8,7 @@ import { createApp } from './commands/create-app'
 import { doctor } from './commands/doctor'
 import { graph } from './commands/graph'
 import { check } from './commands/check'
+import { explain } from './commands/explain'
 
 const program = new Command()
 
@@ -52,6 +53,15 @@ program
   .option('-r, --root <directory>', 'Project root', process.cwd())
   .action(async options => {
     await check(options)
+  })
+
+program
+  .command('explain <node>')
+  .description('Explain a node and its application graph relationships')
+  .option('--json', 'Print a machine-readable explanation')
+  .option('-r, --root <directory>', 'Project root', process.cwd())
+  .action(async (node, options) => {
+    await explain(node, options)
   })
 
 // drift dev command

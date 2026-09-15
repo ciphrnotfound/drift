@@ -93,9 +93,11 @@ drift graph
 drift graph --json
 drift check
 drift check --json
+drift explain route:/
+drift explain route:/ --json
 ```
 
-The JSON form is versioned and deterministic so it can be used by tests, editor tooling, and coding agents. `drift check` validates graph structure and reports conflicting routes with source locations. The graph does not yet claim to compile or enforce every relationship in the application.
+The JSON form is versioned and deterministic so it can be used by tests, editor tooling, and coding agents. `drift check` validates graph structure and reports conflicting routes with source locations. `drift explain <node>` shows a node's source and relationships without requiring consumers to scan the full graph. The graph does not yet claim to compile or enforce every relationship in the application.
 
 ## Experimental Rust Kernel
 

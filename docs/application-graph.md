@@ -31,9 +31,11 @@ drift graph --json
 drift graph --root ./path/to/project --json
 drift check
 drift check --json
+drift explain route:/
+drift explain route:/ --json
 ```
 
-The human output is optimized for a quick architecture scan. The JSON output is the contract for future graph tooling and is intentionally more stable than the display format.
+The human output is optimized for a quick architecture scan. `drift explain <node>` accepts a stable node ID or exact node name and prints its source plus incoming and outgoing relationships. The JSON output is the contract for future graph tooling and is intentionally more stable than the display format.
 
 ## Current Boundary
 
@@ -45,5 +47,4 @@ That boundary is deliberate. The next layers can evolve the graph into DIR while
 
 1. Add explicit public TypeScript declaration helpers for services, actions, resources, and policies.
 2. Add diagnostics for missing dependencies and dependency cycles.
-3. Version a small DIR schema and expose `drift explain <node> --json`.
-4. Feed the graph into a Rust runtime planning boundary.
+3. Feed the graph into a Rust runtime planning boundary.

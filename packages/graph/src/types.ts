@@ -73,6 +73,12 @@ export interface GraphDiagnostic {
   line?: number
 }
 
+export interface GraphExplanation {
+  node: GraphNode
+  incoming: GraphEdge[]
+  outgoing: GraphEdge[]
+}
+
 export interface GraphSourceFile {
   path: string
   source: string
