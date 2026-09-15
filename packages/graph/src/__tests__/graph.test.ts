@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { buildApplicationGraph, validateApplicationGraph } from '../index'
+import { buildApplicationGraph, explainGraph, validateApplicationGraph } from '../index'
 
 describe('Drift application graph', () => {
   test('builds deterministic route and component nodes from Drift files', () => {
@@ -74,5 +74,19 @@ describe('Drift application graph', () => {
       severity: 'error',
       message: expect.stringContaining('Route /blog is claimed by 2 pages'),
     })])
+  })
+
+  test('explains a node by stable id or exact name', () => {
+    const graph = buildApplicationGraph({
+      root: '/project',
+      files: [{ path: '/project/pages/index.drift', source: 'page Home {}' }],
+    })
+
+    expect(explainGraph(graph, 'route:/')).toEqual(expect.objectContaining({
+      node: expect.objectContaining({ id: 'route:/' }),
+      outgoing: [expect.objectContaining({ to: 'page:pages/index.drift', kind: 'contains' })],
+    }))
+    expect(explainGraph(graph, 'Home')?.node.id).toBe('page:pages/index.drift')
+    expect(explainGraph(graph, 'missing')).toBeNull()
   })
 })
