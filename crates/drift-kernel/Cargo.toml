@@ -1,0 +1,20 @@
+[package]
+name = "drift-kernel"
+description = "Experimental Rust HTTP kernel for Drift application graphs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+axum.workspace = true
+drift-ir = { path = "../drift-ir" }
+serde.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tower = { version = "0.5.2", features = ["util"] }
+
+[lints]
+workspace = true

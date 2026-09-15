@@ -17,6 +17,7 @@
     "release:check": "node scripts/release-check.mjs",
     "release:pack": "node scripts/validate-packages.mjs",
     "release:publish": "node scripts/publish-packages.mjs",
+    "rust:check": "cargo fmt --all -- --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings",
     "metadata": "node scripts/update-package-metadata.js",
     "test:ui": "vitest --ui",
     "type-check": "node scripts/release-check.mjs --typecheck",
