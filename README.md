@@ -97,6 +97,17 @@ drift check --json
 
 The JSON form is versioned and deterministic so it can be used by tests, editor tooling, and coding agents. `drift check` validates graph structure and reports conflicting routes with source locations. The graph does not yet claim to compile or enforce every relationship in the application.
 
+## Experimental Rust Kernel
+
+The workspace now includes a small Rust DIR validator and HTTP kernel. It can load the graph emitted by Drift and expose its health, graph, and routes while the typed action runtime is built:
+
+```bash
+pnpm drift graph --json > .drift/application-graph.json
+cargo run -p drift-kernel -- --graph .drift/application-graph.json
+```
+
+See [DIR](./docs/dir.md) and the [kernel](./docs/runtime.md) documentation for the current boundary and planned work.
+
 ## Routing
 
 Routes are generated from the `pages` directory:
@@ -206,11 +217,12 @@ pnpm test:e2e        # Browser tests
 pnpm type-check      # TypeScript checks
 pnpm build           # Package and example builds
 pnpm test:budgets    # Production bundle budgets
+pnpm rust:check      # Rust formatting, tests, and Clippy
 ```
 
 ## Project Status
 
-The current release gate passes 138 unit and integration tests plus 10 browser tests. See:
+The current JavaScript release gate passes 154 unit and integration tests plus 10 browser tests. The Rust workspace adds its own DIR and kernel tests through `pnpm rust:check`. See:
 
 - [Shipping readiness](./docs/SHIPPING.md)
 - [Compatibility policy](./docs/COMPATIBILITY.md)

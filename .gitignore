@@ -10,6 +10,7 @@ out/
 example-app/compiled/
 *.tsbuildinfo
 *.tgz
+target/
 
 # Internal task notes kept out of the public repository
 TASK9-COMPLETION-SUMMARY.md
