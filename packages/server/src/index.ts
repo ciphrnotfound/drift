@@ -33,10 +33,94 @@ export type ServerAction<Input, Output, Locals extends Record<string, unknown>> 
   context: ServerContext<Locals>
 ) => Output | Response | Promise<Output | Response>
 
+export type ServiceConstructor<Service> = new (...args: never[]) => Service
+
+export interface DriftPolicy<Locals extends Record<string, unknown> = Record<string, unknown>> {
+  readonly kind: 'policy'
+  readonly authorize: ActionAuthorization<Locals>
+}
+
+export interface DriftResource {
+  readonly kind: 'resource'
+  readonly provider: 'postgres' | 'redis' | 'queue' | 'storage'
+  readonly name: string
+}
+
+export interface DriftActionRunArgs<Input, Locals extends Record<string, unknown>> {
+  input: Input
+  context: ServerContext<Locals>
+  use<Service>(service: ServiceConstructor<Service>): Service
+}
+
+export interface DriftActionDeclarationOptions<Input, Output, Locals extends Record<string, unknown>> {
+  input?: ActionParser<Input>
+  policy?: DriftPolicy<Locals>
+  methods?: string[]
+  resolve?<Service>(service: ServiceConstructor<Service>, context: ServerContext<Locals>): Service
+  run(args: DriftActionRunArgs<Input, Locals>): Output | Response | Promise<Output | Response>
+}
+
+export interface DriftActionDefinition<Input, Output, Locals extends Record<string, unknown>> {
+  readonly kind: 'action'
+  readonly policy?: DriftPolicy<Locals>
+  readonly run: DriftActionDeclarationOptions<Input, Output, Locals>['run']
+  readonly handler: RequestHandler<Locals>
+}
+
 export type RequestHandler<Locals extends Record<string, unknown> = Record<string, unknown>> = (
   request: Request,
   options?: CreateContextOptions<Locals>
 ) => Promise<Response>
+
+/** Mark a class as a statically discoverable Drift service. */
+export function service(): ClassDecorator {
+  return target => {
+    Object.defineProperty(target, 'driftService', { configurable: false, enumerable: false, value: true })
+  }
+}
+
+/** Create a policy that can be attached to a typed Drift action. */
+export function policy<Locals extends Record<string, unknown> = Record<string, unknown>>(
+  authorize: ActionAuthorization<Locals>
+): DriftPolicy<Locals> {
+  return Object.freeze({ kind: 'policy' as const, authorize })
+}
+
+function resourceDescriptor(provider: DriftResource['provider']): (name: string) => DriftResource {
+  return name => {
+    if (!name.trim()) throw new Error(`Drift ${provider} resource requires a name`)
+    return Object.freeze({ kind: 'resource' as const, provider, name })
+  }
+}
+
+/** Declare a named backend capability for graph analysis and runtime wiring. */
+export const resource = Object.freeze({
+  postgres: resourceDescriptor('postgres'),
+  redis: resourceDescriptor('redis'),
+  queue: resourceDescriptor('queue'),
+  storage: resourceDescriptor('storage'),
+})
+
+/** Define a typed action and expose it through the existing secure request boundary. */
+export function action<
+  Input = unknown,
+  Output = unknown,
+  Locals extends Record<string, unknown> = Record<string, unknown>,
+>(options: DriftActionDeclarationOptions<Input, Output, Locals>): DriftActionDefinition<Input, Output, Locals> {
+  const handler = defineAction(async (input: Input, context: ServerContext<Locals>) => {
+    const use = <Service>(constructor: ServiceConstructor<Service>): Service => {
+      if (!options.resolve) throw new Error(`No compiled provider is available for ${constructor.name}`)
+      return options.resolve(constructor, context)
+    }
+    return options.run({ input, context, use })
+  }, {
+    methods: options.methods,
+    parse: options.input,
+    authorize: options.policy?.authorize,
+  })
+
+  return Object.freeze({ kind: 'action' as const, policy: options.policy, run: options.run, handler })
+}
 
 export type Middleware<Locals extends Record<string, unknown> = Record<string, unknown>> = (
   context: ServerContext<Locals>,

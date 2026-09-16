@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { defineAction, json, redirect, serverEnv, withMiddleware } from '../index'
+import { action, defineAction, json, policy, redirect, resource, serverEnv, withMiddleware } from '../index'
 
 const originalSecret = process.env.DRIFT_TEST_SECRET
 
@@ -84,6 +84,28 @@ describe('secure server actions', () => {
 })
 
 describe('server utilities', () => {
+  test('defines typed policies, resources, and executable actions', async () => {
+    const authenticated = policy(context => context.locals.userId === 'user_1')
+    const database = resource.postgres('main')
+    const declared = action({
+      policy: authenticated,
+      input: value => value as { name: string },
+      async run({ input, context }) {
+        return { database: database.name, greeting: `Hello ${input.name}`, requestId: context.requestId }
+      },
+    })
+
+    expect(declared.kind).toBe('action')
+    expect(database).toEqual({ kind: 'resource', provider: 'postgres', name: 'main' })
+    const response = await declared.handler(new Request('https://drift.dev/action', {
+      method: 'POST',
+      headers: { origin: 'https://drift.dev', 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'Ada' }),
+    }), { locals: { userId: 'user_1' } })
+
+    await expect(response.json()).resolves.toMatchObject({ database: 'main', greeting: 'Hello Ada' })
+  })
+
   test('reads required secrets only from valid server environment names', () => {
     process.env.DRIFT_TEST_SECRET = 'secret'
     expect(serverEnv('DRIFT_TEST_SECRET', { required: true })).toBe('secret')
